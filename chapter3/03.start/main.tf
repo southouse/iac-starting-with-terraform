@@ -1,4 +1,19 @@
-resource "local_file" "abc" { # 파일을 프로비저닝
-    content = "abc!"
-    filename = "${path.module}/abc.txt" # 실행되는 테라폼 모듈의 파일 시스템 경로 -> chapter3/03.start/
+terraform {
+  backend "local" {
+    path = "state/terraform.tfstate"
+  }
+}
+
+resource "local_file" "abc" {
+  content = "123!"
+  filename = "${path.module}/abc.txt"
+}
+
+data "local_file" "abc" {
+  filename = local_file.abc.filename
+}
+
+resource "local_file" "def" {
+  content = data.local_file.abc.content
+  filename = "${path.module}/def.txt"
 }
